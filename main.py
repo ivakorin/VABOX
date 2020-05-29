@@ -10,6 +10,11 @@
 #  modify it under the terms of the GNU General Public License
 #  as published by the Free Software Foundation; either version 2
 #  of the License, or (at your option) any later version.
+#
+#  This program is free software; you can redistribute it and/or
+#  modify it under the terms of the GNU General Public License
+#  as published by the Free Software Foundation; either version 2
+#  of the License, or (at your option) any later version.
 
 import gc
 import json
@@ -21,7 +26,6 @@ import ntptime
 import urequests
 from machine import Timer
 from umqtt.robust import MQTTClient
-import onewire, ds18x20
 
 ''' Цвет диодов по таблице http://www.vendian.org/mncharity/dir3/blackbody/UnstableURLs/bbr_color.html '''
 light_color_list = ((255, 111, 0), (255, 109, 0), (255, 118, 0), (255, 115, 0), (255, 124, 0), (255, 121, 0),
@@ -181,6 +185,7 @@ def half_day_calculate(now, first):
 
 
 def sunrise():
+    timers('deinit', 1)
     today = list(time.localtime())
     curr_day = today[7]
     with open('config.json') as f:
@@ -366,7 +371,7 @@ def light_mgmnt():
     today = list(time.localtime())
     curr_day = today[7]
     sunrise = set_sunrise('astronomical_twilight_begin')
-    sunset = set_sunrise('astronomical_twilight_end')
+    sunset = set_sunrise('sunset')
     now = today_list('')
     if now[2] > sunrise[2] or curr_day > conf_day:
         time_correct()
