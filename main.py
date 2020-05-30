@@ -20,6 +20,11 @@
 #  modify it under the terms of the GNU General Public License
 #  as published by the Free Software Foundation; either version 2
 #  of the License, or (at your option) any later version.
+#
+#  This program is free software; you can redistribute it and/or
+#  modify it under the terms of the GNU General Public License
+#  as published by the Free Software Foundation; either version 2
+#  of the License, or (at your option) any later version.
 
 import gc
 import json
@@ -182,8 +187,8 @@ def half_day_calculate(now, first):
     part = set_day_length() // len(light_color_list)
     sec = count_secs(now, first)
     now = sec // part
+    print('Half day calculated, start...')
     half_day_sun(now)
-    print('Half day')
 
 
 '''Рассвет'''
@@ -384,8 +389,8 @@ def light_mgmnt():
         get_config('sunrise')
         light_mgmnt()
     elif sunrise < now < sunset:
-        half_day_calculate(now, sunrise)
         print('Half day')
+        half_day_calculate(now, sunrise)
     elif now < sunrise:
         get_config('sunrise')
         timer = count_secs(sunrise, now)
