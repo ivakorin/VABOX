@@ -10,23 +10,20 @@
 #  modify it under the terms of the GNU General Public License
 #  as published by the Free Software Foundation; either version 2
 #  of the License, or (at your option) any later version.
-#
-#  This program is free software; you can redistribute it and/or
-#  modify it under the terms of the GNU General Public License
-#  as published by the Free Software Foundation; either version 2
-#  of the License, or (at your option) any later version.
-#
+
 
 import gc
 import json
 import time
 
+import ds18x20
 import machine
 import neopixel
 import ntptime
+import onewire
 import urequests
 from machine import Timer
-from umqtt.robust import MQTTClient
+from umqtt.simple import MQTTClient
 
 ''' Цвет диодов по таблице http://www.vendian.org/mncharity/dir3/blackbody/UnstableURLs/bbr_color.html '''
 light_color_list = ((255, 111, 0), (255, 109, 0), (255, 118, 0), (255, 115, 0), (255, 124, 0), (255, 121, 0),
@@ -63,12 +60,12 @@ def get_config(data):
         return response
     except OSError:
         print('OSError, go to reset')
-        time.sleep_ms(2000)
-        machine.reset()
+        # time.sleep_ms(2000)
+        # machine.reset()
     except ImportError:
+        print('ImportError, go to reset')
         machine.reset()
         time.sleep_ms(2000)
-        print('ImportError, go to reset')
     except ValueError:
         if data == 'sunrise':
             get_json()
@@ -305,34 +302,32 @@ def today_list(data):
 
 
 def fan(state):
-    # config = get_config('config')
-    # fan_control = config['fan_control']
-    # fan = machine.Pin(fan_control, machine.Pin.OUT, value=0)
-    # fan.value(state)
-    # if state == 1:
-    #     mqtt('fan', 'on')
-    # else:
-    #     mqtt('fan', 'off')
-    pass
+    config = get_config('config')
+    fan_control = config['fan_control']
+    fan = machine.Pin(fan_control, machine.Pin.OUT, value=0)
+    fan.value(state)
+    if state == 1:
+        mqtt('fan', 'on')
+    else:
+        mqtt('fan', 'off')
 
 
 def temp_sensor():
-    # config = get_config('config')
-    # tmax = config['tmax']
-    # tmin = config['tmin']
-    # temp_sensor_pin = config['temp_sensor_pin']
-    # dat = machine.Pin(temp_sensor_pin)
-    # ds = ds18x20.DS18X20(onewire.OneWire(dat))
-    # ds.convert_temp()
-    # roms = ds.scan()
-    # for rom in roms:
-    #     temp = ds.read_temp(rom)
-    # if temp > tmax:
-    #     fan(1)
-    # elif temp <= tmin:
-    #     fan(0)
-    # mqtt('temp_sensor', str(temp))
-    pass
+    config = get_config('config')
+    tmax = config['tmax']
+    tmin = config['tmin']
+    temp_sensor_pin = config['temp_sensor_pin']
+    dat = machine.Pin(temp_sensor_pin)
+    ds = ds18x20.DS18X20(onewire.OneWire(dat))
+    ds.convert_temp()
+    roms = ds.scan()
+    for rom in roms:
+        temp = ds.read_temp(rom)
+    if temp > tmax:
+        fan(1)
+    elif temp <= tmin:
+        fan(0)
+    mqtt('temp_sensor', str(temp))
 
 
 '''MQTT'''
@@ -344,7 +339,7 @@ def mqtt(topic, data):
                         user=config['mqtt_user'], password=config['mqtt_pass'])
     client.connect()
     try:
-        client.publish(config['client_id'] + '/' + topic, str(data))
+        client.publish('vabox/' + config['client_id'] + '/' + topic, str(data))
     except OSError:
         pass
 
@@ -368,6 +363,8 @@ def led(rgb):
 
 def light_mgmnt():
     gc.collect()
+    '''Стартуем таймер для публикации в MQTT'''
+    publish_timer()
     config = get_config('config')
     conf_day = config['current_day']
     today = list(time.localtime())
@@ -395,7 +392,6 @@ def light_mgmnt():
         timers('day_end', timer)
 
 
-
 def timers(tipe, arg):
     timer = Timer(-1)
     if tipe == 'sunrise':
@@ -408,4 +404,11 @@ def timers(tipe, arg):
         timer.deinit()
     # timer.init(period=120000, mode=Timer.PERIODIC, callback=lambda t:temp_sensor())
     # timer.deinit()
+
+
+def publish_timer():
+    timer = Timer(-2)
+    timer.init(period=120000, mode=Timer.PERIODIC, callback=lambda t: temp_sensor())
+
+
 light_mgmnt()

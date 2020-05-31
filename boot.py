@@ -5,6 +5,11 @@
 #  modify it under the terms of the GNU General Public License
 #  as published by the Free Software Foundation; either version 2
 #  of the License, or (at your option) any later version.
+#
+#  This program is free software; you can redistribute it and/or
+#  modify it under the terms of the GNU General Public License
+#  as published by the Free Software Foundation; either version 2
+#  of the License, or (at your option) any later version.
 
 import gc
 import json
@@ -28,8 +33,8 @@ def write_id():
     flashid = ubinascii.hexlify(id).decode('utf-8')
     with open('config.json') as f:
         data = json.load(f)
-        data['client_id'] = "vabox_" + str(flashid)  # Вынести к первоначальной настройке
-        data['topic'] = "vabox_" + str(flashid)  # Вынести к первоначальной настройке
+        data['client_id'] = str(flashid)  # Вынести к первоначальной настройке
+        data['topic'] = str(flashid)  # Вынести к первоначальной настройке
     with open('config.json', 'w') as f:
         json.dump(data, f)
 
