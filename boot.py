@@ -10,6 +10,7 @@
 #  modify it under the terms of the GNU General Public License
 #  as published by the Free Software Foundation; either version 2
 #  of the License, or (at your option) any later version.
+#
 
 import gc
 import json
@@ -52,6 +53,9 @@ def update_config():
 def do_connect():
     # Получаем конфиг Wifi
     dir_list = os.listdir()
+    if 'sunrise.json' not in dir_list:
+        file = open('sunrise.json', 'w')
+        file.close()
     if 'config.json' in dir_list:
         try:
             with open('config.json', 'r') as x:

@@ -10,6 +10,7 @@
 #  modify it under the terms of the GNU General Public License
 #  as published by the Free Software Foundation; either version 2
 #  of the License, or (at your option) any later version.
+#
 
 
 import gc
@@ -310,6 +311,7 @@ def fan(state):
         mqtt('fan', 'on')
     else:
         mqtt('fan', 'off')
+    time.sleep_ms(2000)
 
 
 def temp_sensor():
@@ -380,7 +382,8 @@ def light_mgmnt():
     elif sunrise < now < sunset:
         print('Half day')
         half_day_calculate(now, sunrise)
-    elif now < sunrise:
+    elif now[3] < sunrise[3]:
+        get_json()
         get_config('sunrise')
         timer = count_secs(sunrise, now)
         print('now < sunrise')
@@ -411,4 +414,5 @@ def publish_timer():
     timer.init(period=120000, mode=Timer.PERIODIC, callback=lambda t: temp_sensor())
 
 
+temp_sensor()
 light_mgmnt()
