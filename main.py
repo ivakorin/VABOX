@@ -16,6 +16,11 @@
 #  as published by the Free Software Foundation; either version 2
 #  of the License, or (at your option) any later version.
 #
+#  This program is free software; you can redistribute it and/or
+#  modify it under the terms of the GNU General Public License
+#  as published by the Free Software Foundation; either version 2
+#  of the License, or (at your option) any later version.
+#
 
 
 import gc
@@ -32,46 +37,46 @@ from machine import Timer
 from umqtt.simple import MQTTClient
 
 ''' Цвет диодов по таблице http://www.vendian.org/mncharity/dir3/blackbody/UnstableURLs/bbr_color.html CIE 1964 10 degree CMFs'''
-light_color_list = ((255,109,0),
-(255,115,0),
-(255,121,0),
-(255,126,0),
-(255,131,0),
-(255,137,18),
-(255,142,33),
-(255,147,44),
-(255,152,54),
-(255,157,63),
-(255,161,72),
-(255,165,79),
-(255,169,87),
-(255,173,94),
-(255,177,101),
-(255,180,107),
-(255,184,114),
-(255,187,120),
-(255,190,126),
-(255,193,132),
-(255,196,137),
-(255,199,143),
-(255,201,148),
-(255,204,153),
-(255,206,159),
-(255,209,163),
-(255,211,168),
-(255,213,173),
-(255,215,177),
-(255,217,182),
-(255,219,186),
-(255,221,190),
-(255,223,194),
-(255,225,198),
-(255,227,202),
-(255,228,206),
-(255,230,210),
-(255,232,213),
-(255,233,217),
-(255,235,220))
+light_color_list = ((255, 109, 0),
+                    (255, 115, 0),
+                    (255, 121, 0),
+                    (255, 126, 0),
+                    (255, 131, 0),
+                    (255, 137, 18),
+                    (255, 142, 33),
+                    (255, 147, 44),
+                    (255, 152, 54),
+                    (255, 157, 63),
+                    (255, 161, 72),
+                    (255, 165, 79),
+                    (255, 169, 87),
+                    (255, 173, 94),
+                    (255, 177, 101),
+                    (255, 180, 107),
+                    (255, 184, 114),
+                    (255, 187, 120),
+                    (255, 190, 126),
+                    (255, 193, 132),
+                    (255, 196, 137),
+                    (255, 199, 143),
+                    (255, 201, 148),
+                    (255, 204, 153),
+                    (255, 206, 159),
+                    (255, 209, 163),
+                    (255, 211, 168),
+                    (255, 213, 173),
+                    (255, 215, 177),
+                    (255, 217, 182),
+                    (255, 219, 186),
+                    (255, 221, 190),
+                    (255, 223, 194),
+                    (255, 225, 198),
+                    (255, 227, 202),
+                    (255, 228, 206),
+                    (255, 230, 210),
+                    (255, 232, 213),
+                    (255, 233, 217),
+                    (255, 235, 220))
 
 '''Функция чтения конфигов, в зависимости от вида запроса либо конфиг устройства, либо данные по рассвету/закату'''
 
@@ -180,15 +185,25 @@ def time_correct():
 
 
 def half_day_sun(count):
-    i = count
     parts = (len(light_color_list) - 1) // 2
     day_length = set_day_length()
     sleep = day_length // len(light_color_list)
-    while i < parts + 1:
-        led(light_color_list[i])
-        i += 1
-        time.sleep_ms(sleep)
-    sunset(i, sleep)
+    if count < 0:
+        half_day = len(light_color_list) // 2
+        count = half_day - abs(count)
+        i = count
+        while i > 0:
+            led(light_color_list[i])
+            i -= 1
+            time.sleep_ms(sleep)
+        sunset(i, sleep)
+    else:
+        i = count
+        while i < parts + 1:
+            led(light_color_list[i])
+            i += 1
+            time.sleep_ms(sleep)
+        sunset(i, sleep)
 
 
 '''Расчёт текущего света'''
@@ -197,9 +212,15 @@ def half_day_sun(count):
 def half_day_calculate(now, first):
     part = set_day_length() // len(light_color_list)
     sec = count_secs(now, first)
+    half_day = len(light_color_list) // 2
     now = sec // part
-    print('Half day calculated, now is:' + str(now) + '. Try to start...')
-    half_day_sun(now)
+    if now > half_day:
+        count = half_day - now
+        print('Half day calculated, now is:' + str(count) + '. Try to start...')
+        half_day_sun(count)
+    else:
+        print('Half day calculated, now is:' + str(now) + '. Try to start...')
+        half_day_sun(now)
 
 
 '''Рассвет'''
