@@ -31,6 +31,11 @@
 #  as published by the Free Software Foundation; either version 2
 #  of the License, or (at your option) any later version.
 #
+#  This program is free software; you can redistribute it and/or
+#  modify it under the terms of the GNU General Public License
+#  as published by the Free Software Foundation; either version 2
+#  of the License, or (at your option) any later version.
+#
 
 
 import gc
@@ -251,6 +256,7 @@ def sunrise():
     parts = (len(light_color_list) - 1) // 2
     print('Start sun emulation')
     sun_emulation('sunrise', sec)
+    co2(0)
     print('Start day')
     i = 0
     day_length = set_day_length()
@@ -285,6 +291,7 @@ def sunset(count, timer):
     second = set_sunrise('sunset')
     sec = count_secs(first, second)
     print('Try sunset emulation')
+    co2(1)
     sun_emulation('sunset', sec)
     print('start light mgmnt')
     light_mgmnt()
@@ -352,7 +359,7 @@ def today_list(data):
         return today_list
 
 
-''' Датчик температуры и вентилятор '''
+''' Вентилятор '''
 
 
 def fan(state):
@@ -365,6 +372,9 @@ def fan(state):
     else:
         mqtt('fan', 'off')
     time.sleep_ms(2000)
+
+
+'''Датчик температуры'''
 
 
 def temp_sensor():
@@ -383,6 +393,16 @@ def temp_sensor():
     elif temp <= tmin:
         fan(0)
     mqtt('temp_sensor', str(temp))
+
+
+'''Подача CO2'''
+
+
+def co2(state):
+    config = get_config('config')
+    co_control = config['co2_control']
+    co = machine.Pin(co_control, machine.Pin.OUT, value=0)
+    co.value(state)
 
 
 '''MQTT'''
