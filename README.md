@@ -25,6 +25,7 @@
   "mqtt_pass": "", 
   "temp_sensor_pin": , 
   "fan_control": , 
+  "co2_control": , 
   "client_id": "", 
   "topic": "vabox", 
   "current_date": "", 
@@ -49,6 +50,7 @@ mqtt_user - имя пользователя MQTT
 mqtt_pass - пароль пользователя MQTT 
 temp_sensor_pin - пин к которому подключён датчик температуры
 fan_control - пин к которому подключён пин управления вентилятором
+co2_control - пин к которому подключён электромагнитный клапан подачи CO2 
 client_id - оставить пустым 
 topic - имя MQTT топика 
 current_date - оставить пустым
