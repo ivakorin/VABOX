@@ -1,4 +1,4 @@
-#  main.py from vabox
+#  mgmt.py from vabox
 #  Copyright (C) 2020  Ignat Vakorin
 #
 #  This program is free software; you can redistribute it and/or
@@ -10,41 +10,12 @@
 #  modify it under the terms of the GNU General Public License
 #  as published by the Free Software Foundation; either version 2
 #  of the License, or (at your option) any later version.
-#
-#  This program is free software; you can redistribute it and/or
-#  modify it under the terms of the GNU General Public License
-#  as published by the Free Software Foundation; either version 2
-#  of the License, or (at your option) any later version.
-#
-#  This program is free software; you can redistribute it and/or
-#  modify it under the terms of the GNU General Public License
-#  as published by the Free Software Foundation; either version 2
-#  of the License, or (at your option) any later version.
-#
-#  This program is free software; you can redistribute it and/or
-#  modify it under the terms of the GNU General Public License
-#  as published by the Free Software Foundation; either version 2
-#  of the License, or (at your option) any later version.
-#
-#  This program is free software; you can redistribute it and/or
-#  modify it under the terms of the GNU General Public License
-#  as published by the Free Software Foundation; either version 2
-#  of the License, or (at your option) any later version.
-#
-#  This program is free software; you can redistribute it and/or
-#  modify it under the terms of the GNU General Public License
-#  as published by the Free Software Foundation; either version 2
-#  of the License, or (at your option) any later version.
-#
-#  This program is free software; you can redistribute it and/or
-#  modify it under the terms of the GNU General Public License
-#  as published by the Free Software Foundation; either version 2
-#  of the License, or (at your option) any later version.
-#
+
 
 
 import gc
 import json
+import os
 import time
 
 import ds18x20
@@ -102,6 +73,7 @@ light_color_list = ((255, 109, 0),
 
 
 def get_config(data):
+    os.chdir('/')
     try:
         with open(data + '.json', 'r') as x:
             response = json.load(x)
@@ -495,6 +467,5 @@ def publish_timer():
     timer = Timer(-2)
     timer.init(period=300000, mode=Timer.PERIODIC, callback=lambda t: temp_sensor())
 
-
-temp_sensor()
-light_mgmnt()
+# temp_sensor()
+# light_mgmnt()

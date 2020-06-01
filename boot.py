@@ -11,6 +11,11 @@
 #  as published by the Free Software Foundation; either version 2
 #  of the License, or (at your option) any later version.
 #
+#  This program is free software; you can redistribute it and/or
+#  modify it under the terms of the GNU General Public License
+#  as published by the Free Software Foundation; either version 2
+#  of the License, or (at your option) any later version.
+#
 
 import gc
 import json
@@ -24,6 +29,7 @@ import ubinascii
 gc.collect()
 import ntptime
 import micropython
+from main.ota_updater import OTAUpdater
 
 gc.collect()
 micropython.alloc_emergency_exception_buf(100)
@@ -94,3 +100,23 @@ def do_connect():
 
 do_connect()
 gc.collect()
+
+
+def download_and_install_update_if_available():
+    with open('config.json', 'r') as x:
+        config = json.load(x)
+    o = OTAUpdater('https://github.com/ivakorin/vabox')
+    o.download_and_install_update_if_available(config['wlanid'], config['wlan_password'])
+
+
+def start():
+    from main.mgmt import light_mgmnt
+    light_mgmnt()
+
+
+def boot():
+    download_and_install_update_if_available()
+    start()
+
+
+boot()
