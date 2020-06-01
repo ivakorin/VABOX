@@ -9,6 +9,7 @@
 + Управление аэрацией
 + Web-интерфейс
 ### Схема
+[Ссылка на проект в EasyEDA ](https://easyeda.com/ignat.vakorin/vabox_copy)
 ![Схема](/etc/Schematic_VABOX-ESP32.png "Схема")
 ### Запуск
 1. Создать файл _config.json_
