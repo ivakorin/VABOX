@@ -26,6 +26,11 @@
 #  as published by the Free Software Foundation; either version 2
 #  of the License, or (at your option) any later version.
 #
+#  This program is free software; you can redistribute it and/or
+#  modify it under the terms of the GNU General Public License
+#  as published by the Free Software Foundation; either version 2
+#  of the License, or (at your option) any later version.
+#
 
 
 import gc
@@ -459,7 +464,7 @@ def timers(tipe, arg):
 
 def publish_timer():
     timer = Timer(-2)
-    timer.init(period=120000, mode=Timer.PERIODIC, callback=lambda t: temp_sensor())
+    timer.init(period=300000, mode=Timer.PERIODIC, callback=lambda t: temp_sensor())
 
 
 temp_sensor()
