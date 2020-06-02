@@ -3,6 +3,7 @@ Tiny Web - pretty simple and powerful web server for tiny platforms like ESP8266
 MIT license
 (C) Konstantin Belyalov 2017-2018
 """
+#
 #  server.py from vabox
 #  Copyright (C) 2020  Ignat Vakorin
 #
@@ -10,6 +11,7 @@ MIT license
 #  modify it under the terms of the GNU General Public License
 #  as published by the Free Software Foundation; either version 2
 #  of the License, or (at your option) any later version.
+#
 
 import gc
 import logging
@@ -583,11 +585,9 @@ class webserver:
                 await resp.start_html()
                 await resp.send('<html><body><h1>Hello, world!</h1></html>\n')
         """
-
         def _route(f):
             self.add_route(url, f, **kwargs)
             return f
-
         return _route
 
     def resource(self, url, method='GET', **kwargs):
@@ -605,14 +605,12 @@ class webserver:
                 yield '"message": "test",'
                 yield '}'
         """
-
         def _resource(f):
             self.add_route(url, restful_resource_handler,
                            methods=[method],
                            save_headers=['Content-Length', 'Content-Type'],
                            _callmap={method.encode(): (f, kwargs)})
             return f
-
         return _resource
 
     async def _tcp_server(self, host, port, backlog):

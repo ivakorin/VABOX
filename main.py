@@ -6,13 +6,9 @@
 #  as published by the Free Software Foundation; either version 2
 #  of the License, or (at your option) any later version.
 #
-#  This program is free software; you can redistribute it and/or
-#  modify it under the terms of the GNU General Public License
-#  as published by the Free Software Foundation; either version 2
-#  of the License, or (at your option) any later version.
-#
 
 
+import _thread
 import gc
 import json
 import time
@@ -25,6 +21,8 @@ import onewire
 import urequests
 from machine import Timer
 from umqtt.simple import MQTTClient
+
+import tinyweb
 
 ''' Цвет диодов по таблице http://www.vendian.org/mncharity/dir3/blackbody/UnstableURLs/bbr_color.html CIE 1964 10 degree CMFs'''
 light_color_list = ((255, 109, 0),
@@ -283,7 +281,7 @@ def sun_emulation(data, sec):
     msec = sec // (finish // step)
     print('Sleep:' + str(msec / 1000))
     if data == 'sunrise':
-        for x in reversed(range(start, finish, step)):  # Колхоз, чтобы не было деления на 0 и кол-во шагов сохранилось
+        for x in reversed(range(start, finish, step)):
             R = round(rgb[0] // x)
             G = round(rgb[1] // x)
             B = round(rgb[2] // x)
@@ -291,7 +289,7 @@ def sun_emulation(data, sec):
             time.sleep_ms(msec)
         return True
     else:
-        for x in (range(start, finish, step)):  # Колхоз, чтобы не было деления на 0 и кол-во шагов сохранилось
+        for x in (range(start, finish, step)):
             R = round(rgb[0] // x)
             G = round(rgb[1] // x)
             B = round(rgb[2] // x)
@@ -466,5 +464,30 @@ def publish_timer():
     timer.init(period=300000, mode=Timer.PERIODIC, callback=lambda t: temp_sensor())
 
 
+# Create web server application
+app = tinyweb.webserver()
+
+
+# Index page
+@app.route('/')
+@app.route('/index.html')
+async def index(req, resp):
+    # Just send file
+    await resp.send_file('static/index.simple.html')
+
+
+# Images
+@app.route('/images/<fn>')
+async def images(req, resp, fn):
+    # Send picture. Filename - in parameter
+    await resp.send_file('static/images/{}'.format(fn),
+                         content_type='image/jpeg')
+
+
+def run():
+    app.run(host='0.0.0.0', port=8081)
+
+
+_thread.start_new_thread(run, ())
 temp_sensor()
 light_mgmnt()

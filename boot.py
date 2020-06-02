@@ -35,8 +35,8 @@ def write_id():
     flashid = ubinascii.hexlify(id).decode('utf-8')
     with open('config.json') as f:
         data = json.load(f)
-        data['client_id'] = str(flashid)  # Вынести к первоначальной настройке
-        data['topic'] = str(flashid)  # Вынести к первоначальной настройке
+        data['client_id'] = str(flashid)  # TODO: Вынести к первоначальной настройке
+        data['topic'] = str(flashid)  # TODO: Вынести к первоначальной настройке
     with open('config.json', 'w') as f:
         json.dump(data, f)
 
