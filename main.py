@@ -11,37 +11,6 @@
 #  as published by the Free Software Foundation; either version 2
 #  of the License, or (at your option) any later version.
 #
-#  This program is free software; you can redistribute it and/or
-#  modify it under the terms of the GNU General Public License
-#  as published by the Free Software Foundation; either version 2
-#  of the License, or (at your option) any later version.
-#
-#  This program is free software; you can redistribute it and/or
-#  modify it under the terms of the GNU General Public License
-#  as published by the Free Software Foundation; either version 2
-#  of the License, or (at your option) any later version.
-#
-#  This program is free software; you can redistribute it and/or
-#  modify it under the terms of the GNU General Public License
-#  as published by the Free Software Foundation; either version 2
-#  of the License, or (at your option) any later version.
-#
-#  This program is free software; you can redistribute it and/or
-#  modify it under the terms of the GNU General Public License
-#  as published by the Free Software Foundation; either version 2
-#  of the License, or (at your option) any later version.
-#
-#  This program is free software; you can redistribute it and/or
-#  modify it under the terms of the GNU General Public License
-#  as published by the Free Software Foundation; either version 2
-#  of the License, or (at your option) any later version.
-#
-#  This program is free software; you can redistribute it and/or
-#  modify it under the terms of the GNU General Public License
-#  as published by the Free Software Foundation; either version 2
-#  of the License, or (at your option) any later version.
-#
-
 
 import gc
 import json
@@ -208,6 +177,7 @@ def half_day_sun(count):
     parts = (len(light_color_list) - 1) // 2
     day_length = set_day_length()
     sleep = day_length // len(light_color_list)
+    carbon(1)
     if count < 0:
         half_day = len(light_color_list) // 2
         count = half_day - abs(count)
@@ -496,5 +466,6 @@ def publish_timer():
     timer.init(period=300000, mode=Timer.PERIODIC, callback=lambda t: temp_sensor())
 
 
+led((0, 0, 0))
 temp_sensor()
 light_mgmnt()
