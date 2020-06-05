@@ -1,0 +1,23 @@
+{
+  "wlan_password": "pass",
+  "wlanid": "pass",
+  "ntphost": "192.168.1.1",
+  "broker": "192.168.1.1",
+  "mqtt_port": 1883,
+  "mqtt_user": "mqtt",
+  "mqtt_pass": "mqtt",
+  "temp_sensor_pin": 4,
+  "fan_control": 12,
+  "co2_control": 14,
+  "client_id": "",
+  "topic": "vabox",
+  "current_date": "",
+  "lat": "-1.997179",
+  "lng": "-54.861552",
+  "utc_shift": 5,
+  "tmax": 23,
+  "tmin": 22,
+  "led_pin": 5,
+  "led_qty": 30,
+  "current_day": 0
+}

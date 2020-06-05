@@ -226,7 +226,7 @@ def sunrise():
     first = set_sunrise('sunrise')
     second = set_sunrise('astronomical_twilight_begin')
     sec = count_secs(first, second)
-    parts = (len(light_color_list) - 1) // 2
+    parts = (len(light_color_list) - 1)
     print('Start sun emulation')
     sun_emulation('sunrise', sec)
     carbon(1)
@@ -464,6 +464,21 @@ def publish_timer():
     timer.init(period=300000, mode=Timer.PERIODIC, callback=lambda t: temp_sensor())
 
 
+# class CustomersList():
+#
+#     def get(self, data):
+#         config = get_config('config')
+#         return config
+
+# def post(self, data):
+#     """Add customer"""
+#     global next_id
+#     db[str(next_id)] = data
+#     next_id += 1
+#     # Return message AND set HTTP response code to "201 Created"
+#     return {'message': 'created'}, 201
+
+
 # Create web server application
 app = tinyweb.webserver()
 
@@ -476,6 +491,11 @@ async def index(req, resp):
     await resp.send_file('static/index.simple.html')
 
 
+@app.route('/config.json')
+async def config_web(req, resp):
+    await resp.send_file('config.json')
+
+
 # Images
 @app.route('/images/<fn>')
 async def images(req, resp, fn):
@@ -485,6 +505,7 @@ async def images(req, resp, fn):
 
 
 def run():
+    # app.add_resource(CustomersList, '/config.json')
     app.run(host='0.0.0.0', port=8081)
 
 
