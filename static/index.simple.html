@@ -71,7 +71,13 @@
 <!--    </div>-->
 
 <!--</main>&lt;!&ndash; /.container &ndash;&gt;-->
-<form id="id01"></form>
+<div class="container">
+    <form action="#" class="config" method="post">
+        <div id="id01"></div>
+        <button class="btn btn-primary" type="submit">Save</button>
+    </form>
+</div>
+<pre id="output"></pre>
 <script>
         var xhr = new XMLHttpRequest();
         xhr.open('GET', 'config.json', false);
@@ -83,13 +89,12 @@
             var out = "";
             var i;
             for(var key in arr) {
-                out += '<label for="exampleFormControlSelect2">'+key+'</label>'
-                out += '<input class="form-control form-control-sm" type="text" placeholder="'+arr[key]+'">';
+                out += '<div class="input-group input-group-sm mb-3" id="id01"><div class="input-group-prepend"><span class="input-group-text" id="inputGroup-sizing-sm">'+key+'</span></div>'
+                out += '<input name="'+key+'"type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" value="'+arr[key]+'"></div>';
             }
             out +="";
             document.getElementById("id01").innerHTML = out;
         }
-
 
 </script>
 <!-- Bootstrap core JavaScript
