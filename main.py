@@ -488,7 +488,7 @@ app = tinyweb.webserver()
 @app.route('/index.html')
 async def index(req, resp):
     # Just send file
-    await resp.send_file('static/index.simple.html')
+    await resp.send_file('static/index.html')
 
 
 @app.route('/config.json')
